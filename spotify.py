@@ -1,9 +1,11 @@
 import requests
 import base64
-import dotenv
-#TODO: change to .env
-CLIENT_ID = dotenv.get_key(".env", "SPOTIFY_CLIENT_ID")
-CLIENT_SECRET = dotenv.get_key(".env", "SPOTIFY_CLIENT_SECRET")
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 
 def get_access_token():
     # TODO: use not expired access token
