@@ -1,6 +1,9 @@
-import requests
-import base64
 import os
+import base64
+import json
+import urllib
+
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -48,7 +51,28 @@ def validate_response(response):
 
     return response
 
+def search_track(track_name):
+    url = "https://api.spotify.com/v1/search"
+    params = {
+        "type": "track",
+        "limit": 5,
+        "q": track_name,
+        }
+    url += "?" + urllib.parse.urlencode(params)
 
-response = requests.get("https://api.spotify.com/v1/playlists/280Kv8R7Js4QLIF8o94YlZ", headers=get_auth_header())
-response = validate_response(response).json()
-print(response)
+    response = requests.get(url, headers=get_auth_header())
+    response = validate_response(response).json()
+
+    response = response["tracks"]["items"][0]
+    print(json.dumps(response, indent=2) ) # TODO: add logging)
+    return response
+
+def get_playlist(playlist_id):
+    playlist_id = playlist_id.split("/")[-1]
+    url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
+
+    response = requests.get(url, headers=get_auth_header())
+    response = validate_response(response).json()
+
+    print(json.dumps(response, indent=2) ) # TODO: add logging
+    return response
